@@ -1,5 +1,5 @@
 # Fortran compiler executable -*- Makefile -*-
-FC = gfortran
+FC = scalasca -instrument gfortran
 
 # Tell the compiler to accept C-preprocessor directives
 CPPFLAGS = -cpp
