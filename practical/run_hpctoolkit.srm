@@ -28,7 +28,8 @@ module load cmake/3.23.2_sequana
 module load python/3.9.1_sequana
 alias python='python3.9'
 alias python3='python3.9'
-module load openmpi/gnu/4.1.2+cuda-11.2_sequana
+module load gcc/8.3_sequana
+module load openmpi/gnu/2.1.6-gcc-8.3-cuda_sequana
 
 workdir=/scratch/cenapadrjsd/rpsouto
 version=v0.17.1
@@ -37,14 +38,18 @@ spackdir=${workdir}/spack/${partition}/${version}
 . ${spackdir}/share/spack/setup-env.sh
 
 export SPACK_USER_CONFIG_PATH=${workdir}/.spack/${partition}/${version}
+export SPACK_USER_CACHE_PATH=/tmp
+export TMP=${SPACK_USER_CACHE_PATH}
+export TMPDIR=${SPACK_USER_CACHE_PATH}
 
-spack load scalasca
+
+spack load hpctoolkit@2021.10.15 
 spack load netcdf-fortran
 
 DIR=$PWD
 
-execfile="ecrad"
-BIN=./${execfile}
+executable="ecrad"
+BIN=./${executable}
 
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
@@ -52,13 +57,22 @@ cd $DIR
 
 export OMPI_MCA_opal_warn_on_missing_libcuda=0
 
-scalasca -analyze -s ./${execfile} config.nam era5slice.nc control.nc 
+mpirun -n $SLURM_NTASKS \
+hpcrun -t -e CPUTIME \
+./${executable} config.nam era5slice.nc control.nc 
+
+hpcstruct ${executable} 
+
+hpcprof \
+#-I ../BT-MZ/+ \
+ -S ${executable}.hpcstruct hpctoolkit-${executable}-measurements-${SLURM_JOBID}
+
+hpctoolkitresultdir=profiling/hpctoolkit/NUMNODES-$SLURM_JOB_NUM_NODES/_MPI-${SLURM_NTASKS}_OMP-${SLURM_CPUS_PER_TASK}_JOBID-${SLURM_JOBID}
 
 
-scorepdirorig="scorep_${execfile}_Ox${SLURM_CPUS_PER_TASK}_sum"
-scorepdirdest="scorep_sum_OPENMP-${SLURM_CPUS_PER_TASK}_JOBID-${SLURM_JOBID}"
-mv $scorepdirorig $scorepdirdest
-mv slurm-${SLURM_JOBID}.out $scorepdirdest/
+mkdir -p ${hpctoolkitresultdir}
+mv slurm-${SLURM_JOBID}.out ${hpctoolkitresultdir}/
+mv hpctoolkit-${executable}-database-${SLURM_JOBID} ${hpctoolkitresultdir}/
+mv hpctoolkit-${executable}-measurements-${SLURM_JOBID} ${hpctoolkitresultdir}/
+mv ${executable}.hpcstruct ${hpctoolkitresultdir}/
 
-#pós-processamento contendo análise mais detalhada
-scalasca -examine -s $scorepdirdest
