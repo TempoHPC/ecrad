@@ -42,9 +42,9 @@ export SPACK_USER_CACHE_PATH=/tmp
 export TMP=${SPACK_USER_CACHE_PATH}
 export TMPDIR=${SPACK_USER_CACHE_PATH}
 
+spack load netcdf-fortran@4.5.3%gcc@8.3.0
+spack load hpctoolkit%gcc@8.3.0
 
-spack load hpctoolkit@2021.10.15 
-spack load netcdf-fortran
 
 DIR=$PWD
 
@@ -64,10 +64,10 @@ hpcrun -t -e CPUTIME \
 hpcstruct ${executable} 
 
 hpcprof \
-#-I ../BT-MZ/+ \
- -S ${executable}.hpcstruct hpctoolkit-${executable}-measurements-${SLURM_JOBID}
+-I ../+ \
+    -S ${executable}.hpcstruct hpctoolkit-${executable}-measurements-${SLURM_JOBID}
 
-hpctoolkitresultdir=profiling/hpctoolkit/NUMNODES-$SLURM_JOB_NUM_NODES/_MPI-${SLURM_NTASKS}_OMP-${SLURM_CPUS_PER_TASK}_JOBID-${SLURM_JOBID}
+hpctoolkitresultdir=profiling/hpctoolkit/NUMNODES-$SLURM_JOB_NUM_NODES/MPI-${SLURM_NTASKS}_OMP-${SLURM_CPUS_PER_TASK}_JOBID-${SLURM_JOBID}
 
 
 mkdir -p ${hpctoolkitresultdir}
