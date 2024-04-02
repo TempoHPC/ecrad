@@ -508,7 +508,8 @@ contains
         end if
 
         ! All-sky fluxes: first the clear region...
-        do jg = 1,ng
+        !do jg = 1,ng
+        do concurrent(jg=1 : ng)
           flux_dn(jg,1) = (transmittance_clear(jg,jlev)*flux_dn(jg,1) + direct_dn(jg,1) &
                &  * (trans_dir_dir_clear(jg,jlev)*total_albedo_direct(jg,1,jlev+1)*reflectance_clear(jg,jlev) &
                &     + trans_dir_diff_clear(jg,jlev) )) &
