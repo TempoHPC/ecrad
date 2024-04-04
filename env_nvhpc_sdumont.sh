@@ -13,3 +13,5 @@ module load nvhpc/22.2
 . /scratch/cenapadrjsd/rpsouto/sequana/usr/local/spack/git/spack_nvhpc_22.2/share/spack/setup-env.sh
 export SPACK_USER_CONFIG_PATH=/scratch/cenapadrjsd/rpsouto/.spack/v0.17.1_nvhpc_22.2
 
+#Carrega o netcdf-fortran@4.5.3
+spack load /uvcnbiv
