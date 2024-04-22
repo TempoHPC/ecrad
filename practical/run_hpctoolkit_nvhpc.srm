@@ -18,7 +18,7 @@ echo "Number of MPI processes per node: " $SLURM_NTASKS_PER_NODE
 echo "Number of threads per MPI process: " $SLURM_CPUS_PER_TASK
 echo "NPB Benchmark: " $1
 echo "Bechmark class problem: " $2
-:q
+
 ###################################
 #           COMPILER              #
 ###################################
