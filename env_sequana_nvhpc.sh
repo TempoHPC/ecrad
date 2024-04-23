@@ -7,6 +7,7 @@ module load python/3.9.1_sequana
 module load gcc/8.3_sequana
 module use /scratch/cenapadrjsd/rpsouto/opt/nvidia/hpc_sdk/modulefiles
 module load nvhpc/22.2
+module load zlib/1.2.11_sequana
 
 workdir=/scratch/cenapadrjsd/rpsouto
 version=v0.17.1
