@@ -38,8 +38,6 @@ export SPACK_USER_CONFIG_PATH=${workdir}/.spack/${partition}/${version}
 export SPACK_USER_CACHE_PATH=/tmp
 
 spack load netcdf-fortran@4.5.3%nvhpc@22.2
-spack load /x4wu6o6
-#spack load hpctoolkit%gcc@8.3.0
 
 DIR=$PWD
 
@@ -53,20 +51,9 @@ cd $DIR
 export OMPI_MCA_opal_warn_on_missing_libcuda=0
 
 mpirun -n $SLURM_NTASKS \
-hpcrun -t -e CPUTIME \
 ./${executable} config.nam era5slice.nc control.nc 
 
-hpcstruct ${executable} 
+resultdir=resultdir/NUMNODES-$SLURM_JOB_NUM_NODES/MPI-${SLURM_NTASKS}_OMP-${SLURM_CPUS_PER_TASK}_JOBID-${SLURM_JOBID}
 
-hpcprof \
--I ../+ \
-    -S ${executable}.hpcstruct hpctoolkit-${executable}-measurements-${SLURM_JOBID}
-
-hpctoolkitresultdir=hpctoolkit/NUMNODES-$SLURM_JOB_NUM_NODES/MPI-${SLURM_NTASKS}_OMP-${SLURM_CPUS_PER_TASK}_JOBID-${SLURM_JOBID}
-
-mkdir -p ${hpctoolkitresultdir}
-mv slurm-${SLURM_JOBID}.out ${hpctoolkitresultdir}/
-mv hpctoolkit-${executable}-database-${SLURM_JOBID} ${hpctoolkitresultdir}/
-mv hpctoolkit-${executable}-measurements-${SLURM_JOBID} ${hpctoolkitresultdir}/
-mv ${executable}.hpcstruct ${hpctoolkitresultdir}/
-
+mkdir -p ${resultdir}
+mv slurm-${SLURM_JOBID}.out ${resultdir}/
