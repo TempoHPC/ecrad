@@ -53,7 +53,7 @@ cd $DIR
 export OMPI_MCA_opal_warn_on_missing_libcuda=0
 
 mpirun -n $SLURM_NTASKS \
-hpcrun -t -e CPUTIME \
+hpcrun -t -e REALTIME@5000 \
 ./${executable} config.nam era5slice.nc control.nc 
 
 hpcstruct ${executable} 
