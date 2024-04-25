@@ -16,7 +16,6 @@ spackdir=${workdir}/spack/${partition}/${version}
 . ${spackdir}/share/spack/setup-env.sh
 
 export SPACK_USER_CONFIG_PATH=${workdir}/.spack/${partition}/${version}
-export SPACK_USER_CACHE_PATH=/tmp
 
 spack load netcdf-fortran@4.5.3%nvhpc@22.2
 
